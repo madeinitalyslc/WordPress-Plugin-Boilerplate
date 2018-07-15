@@ -97,6 +97,15 @@ class Plugin_Name_Admin extends Plugin_Name_Abstract
         return array_merge(  $settings_link, $links );
     }
 
+    public function add_acf_action_links( array $links ) : array
+    {
+        $settings_link = [
+            '<a href="' . admin_url( 'admin.php?page=acf-options-' . $this->get_plugin_name() . '-settings' ) . '">' . $this->trans( 'Settings' ) . '</a>',
+        ];
+
+        return array_merge(  $settings_link, $links );
+    }
+
     public function display_plugin_options_page()
     {
         include_once plugin_dir_url( __FILE__ ) . 'partials/plugin-name-admin-display.php';

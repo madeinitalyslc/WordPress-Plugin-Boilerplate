@@ -146,14 +146,15 @@ class Plugin_Name extends Plugin_Name_Abstract
         $this->get_loader()->add_action( 'admin_enqueue_scripts', $this->get_admin(), 'enqueue_styles' );
         $this->get_loader()->add_action( 'admin_enqueue_scripts', $this->get_admin(), 'enqueue_scripts' );
 
+        $plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->get_plugin_name() . '.php' );
+
         if ( function_exists( 'acf_add_options_page' ) ) {
             $this->get_loader()->add_action( 'acf/init', $this->get_admin(), 'add_acf_plugin_admin_menu' );
+            $this->get_loader()->add_filter( 'plugin_action_links_' . $plugin_basename, $this->get_admin(), 'add_acf_action_links' );
         } else {
             $this->get_loader()->add_action( 'admin_menu', $this->get_admin(), 'add_plugin_admin_menu' );
+            $this->get_loader()->add_filter( 'plugin_action_links_' . $plugin_basename, $this->get_admin(), 'add_action_links' );
         }
-
-        $plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->get_plugin_name() . '.php' );
-        $this->get_loader()->add_filter( 'plugin_action_links_' . $plugin_basename, $this->get_admin(), 'add_action_links' );
     }
 
 	/**

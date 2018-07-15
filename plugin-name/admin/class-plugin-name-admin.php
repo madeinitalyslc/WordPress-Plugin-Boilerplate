@@ -77,6 +77,17 @@ class Plugin_Name_Admin extends Plugin_Name_Abstract
         );
     }
 
+    public function add_acf_plugin_admin_menu()
+    {
+        $option_page = acf_add_options_page([
+            'page_title'    => $this->trans( 'WordPress Plugin Boilerplate General Settings' ),
+            'menu_title'    => $this->trans( 'WordPress Plugin Boilerplate Settings' ),
+            'menu-slug'     => $this->get_plugin_name() . '-settings',
+            'capability'    => 'manage_options',
+            'redirect'      => false
+        ]);
+    }
+
     public function add_action_links( array $links ) : array
     {
         $settings_link = [

@@ -24,24 +24,19 @@
  * @subpackage Plugin_Name/includes
  * @author     Your Name <email@example.com>
  */
-class Plugin_Name_i18n {
-
-
+class Plugin_Name_i18n extends Plugin_Name_Abstract
+{
 	/**
 	 * Load the plugin text domain for translation.
 	 *
 	 * @since    1.0.0
 	 */
-	public function load_plugin_textdomain() {
-
+	public function load_plugin_textdomain()
+    {
 		load_plugin_textdomain(
-			'plugin-name',
+			$this->get_plugin_name(),
 			false,
 			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 		);
-
 	}
-
-
-
 }

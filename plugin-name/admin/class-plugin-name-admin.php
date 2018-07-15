@@ -20,47 +20,15 @@
  * @subpackage Plugin_Name/admin
  * @author     Your Name <email@example.com>
  */
-class Plugin_Name_Admin {
-
-	/**
-	 * The ID of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string    $plugin_name    The ID of this plugin.
-	 */
-	private $plugin_name;
-
-	/**
-	 * The version of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string    $version    The current version of this plugin.
-	 */
-	private $version;
-
-	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @since    1.0.0
-	 * @param      string    $plugin_name       The name of this plugin.
-	 * @param      string    $version    The version of this plugin.
-	 */
-	public function __construct( $plugin_name, $version ) {
-
-		$this->plugin_name = $plugin_name;
-		$this->version = $version;
-
-	}
-
+class Plugin_Name_Admin extends Plugin_Name_Abstract
+{
 	/**
 	 * Register the stylesheets for the admin area.
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
-
+	public function enqueue_styles()
+    {
 		/**
 		 * This function is provided for demonstration purposes only.
 		 *
@@ -73,8 +41,7 @@ class Plugin_Name_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/plugin-name-admin.css', array(), $this->version, 'all' );
-
+		wp_enqueue_style( $this->get_plugin_name(), plugin_dir_url( __FILE__ ) . 'css/plugin-name-admin.css', array(), $this->get_plugin_version(), 'all' );
 	}
 
 	/**
@@ -82,8 +49,8 @@ class Plugin_Name_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
-
+	public function enqueue_scripts()
+    {
 		/**
 		 * This function is provided for demonstration purposes only.
 		 *
@@ -96,8 +63,31 @@ class Plugin_Name_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/plugin-name-admin.js', array( 'jquery' ), $this->version, false );
-
+		wp_enqueue_script( $this->get_plugin_name(), plugin_dir_url( __FILE__ ) . 'js/plugin-name-admin.js', array( 'jquery' ), $this->get_plugin_version(), false );
 	}
 
+    public function add_plugin_admin_menu()
+    {
+        add_options_page(
+            $this->trans( 'WordPress Plugin Boilerplate Options' ),
+            $this->trans( 'WordPress Plugin Boilerplate Options' ),
+            'manage_options',
+            $this->get_plugin_name(),
+            [ $this, 'display_plugin_options_page' ]
+        );
+    }
+
+    public function add_action_links( array $links ) : array
+    {
+        $settings_link = [
+            '<a href="' . admin_url( 'options-general.php?page=' . $this->get_plugin_name() ) . '">' . $this->trans( 'Settings' ) . '</a>',
+        ];
+
+        return array_merge(  $settings_link, $links );
+    }
+
+    public function display_plugin_options_page()
+    {
+        include_once plugin_dir_url( __FILE__ ) . 'partials/plugin-name-admin-display.php';
+    }
 }

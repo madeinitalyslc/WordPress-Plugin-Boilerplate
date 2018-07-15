@@ -36,6 +36,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Rename this for your plugin and update it as you release new versions.
  */
 define( 'PLUGIN_NAME_VERSION', '1.0.0' );
+define( 'PLUGIN_NAME_NAME', 'plugin-name' );
 
 /**
  * The code that runs during plugin activation.
@@ -62,6 +63,9 @@ register_deactivation_hook( __FILE__, 'deactivate_plugin_name' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name-i18n-trait.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name-interface.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name-abstract.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name.php';
 
 /**
@@ -74,9 +78,9 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name.php';
  * @since    1.0.0
  */
 function run_plugin_name() {
-
-	$plugin = new Plugin_Name();
+	$plugin = new Plugin_Name( PLUGIN_NAME_NAME, PLUGIN_NAME_VERSION );
 	$plugin->run();
-
 }
+
+// Run
 run_plugin_name();

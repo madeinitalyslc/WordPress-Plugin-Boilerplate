@@ -27,8 +27,8 @@
  * @subpackage Plugin_Name/includes
  * @author     Your Name <email@example.com>
  */
-class Plugin_Name {
-
+class Plugin_Name extends Plugin_Name_Abstract
+{
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
 	 * the plugin.
@@ -39,23 +39,22 @@ class Plugin_Name {
 	 */
 	protected $loader;
 
-	/**
-	 * The unique identifier of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
-	 */
-	protected $plugin_name;
+    /**
+     * I18n class for register and translating
+     *
+     * @var Plugin_Name_i18n
+     */
+    protected $i18n;
 
-	/**
-	 * The current version of the plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      string    $version    The current version of the plugin.
-	 */
-	protected $version;
+    /**
+     * @var Plugin_Name_Admin
+     */
+    protected $admin;
+
+    /**
+     * @var Plugin_Name_Public
+     */
+    protected $public;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -65,21 +64,19 @@ class Plugin_Name {
 	 * the public-facing side of the site.
 	 *
 	 * @since    1.0.0
+     *
+     * @param string $plugin_name
+     * @param string $plugin_version
 	 */
-	public function __construct() {
-		if ( defined( 'PLUGIN_NAME_VERSION' ) ) {
-			$this->version = PLUGIN_NAME_VERSION;
-		} else {
-			$this->version = '1.0.0';
-		}
-		$this->plugin_name = 'plugin-name';
+    public function __construct( string $plugin_name, string $plugin_version )
+    {
+        parent::__construct( $plugin_name, $plugin_version );
 
-		$this->load_dependencies();
-		$this->set_locale();
-		$this->define_admin_hooks();
-		$this->define_public_hooks();
-
-	}
+        $this->load_dependencies();
+        $this->set_locale();
+        $this->define_admin_hooks();
+        $this->define_public_hooks();
+    }
 
 	/**
 	 * Load the required dependencies for this plugin.
@@ -97,8 +94,8 @@ class Plugin_Name {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function load_dependencies() {
-
+	private function load_dependencies()
+    {
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
@@ -121,9 +118,6 @@ class Plugin_Name {
 		 * side of the site.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-plugin-name-public.php';
-
-		$this->loader = new Plugin_Name_Loader();
-
 	}
 
 	/**
@@ -135,13 +129,10 @@ class Plugin_Name {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function set_locale() {
-
-		$plugin_i18n = new Plugin_Name_i18n();
-
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
-	}
+	private function set_locale()
+    {
+        $this->get_loader()->add_action( 'plugins_loaded', $this->get_i18n(), 'load_plugin_textdomain' );
+    }
 
 	/**
 	 * Register all of the hooks related to the admin area functionality
@@ -150,14 +141,16 @@ class Plugin_Name {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function define_admin_hooks() {
+	private function define_admin_hooks()
+    {
+        $this->get_loader()->add_action( 'admin_enqueue_scripts', $this->get_admin(), 'enqueue_styles' );
+        $this->get_loader()->add_action( 'admin_enqueue_scripts', $this->get_admin(), 'enqueue_scripts' );
 
-		$plugin_admin = new Plugin_Name_Admin( $this->get_plugin_name(), $this->get_version() );
+        $this->get_loader()->add_action( 'admin_menu', $this->get_admin(), 'add_plugin_admin_menu' );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-
-	}
+        $plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->get_plugin_name() . '.php' );
+        $this->get_loader()->add_filter( 'plugin_action_links_' . $plugin_basename, $this->get_admin(), 'add_action_links' );
+    }
 
 	/**
 	 * Register all of the hooks related to the public-facing functionality
@@ -166,13 +159,10 @@ class Plugin_Name {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function define_public_hooks() {
-
-		$plugin_public = new Plugin_Name_Public( $this->get_plugin_name(), $this->get_version() );
-
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-
+	private function define_public_hooks()
+    {
+        $this->get_loader()->add_action( 'wp_enqueue_scripts', $this->get_public(), 'enqueue_styles' );
+        $this->get_loader()->add_action( 'wp_enqueue_scripts', $this->get_public(), 'enqueue_scripts' );
 	}
 
 	/**
@@ -180,19 +170,9 @@ class Plugin_Name {
 	 *
 	 * @since    1.0.0
 	 */
-	public function run() {
-		$this->loader->run();
-	}
-
-	/**
-	 * The name of the plugin used to uniquely identify it within the context of
-	 * WordPress and to define internationalization functionality.
-	 *
-	 * @since     1.0.0
-	 * @return    string    The name of the plugin.
-	 */
-	public function get_plugin_name() {
-		return $this->plugin_name;
+	public function run()
+    {
+		$this->get_loader()->run();
 	}
 
 	/**
@@ -201,18 +181,56 @@ class Plugin_Name {
 	 * @since     1.0.0
 	 * @return    Plugin_Name_Loader    Orchestrates the hooks of the plugin.
 	 */
-	public function get_loader() {
+	public function get_loader()
+    {
+        if (! $this->loader) {
+            $this->loader = new Plugin_Name_Loader();
+        }
+
 		return $this->loader;
 	}
 
-	/**
-	 * Retrieve the version number of the plugin.
-	 *
-	 * @since     1.0.0
-	 * @return    string    The version number of the plugin.
-	 */
-	public function get_version() {
-		return $this->version;
-	}
+    /**
+     * Retrieve the I18n object
+     *
+     * @since 1.1.0
+     *
+     * @return Plugin_Name_i18n
+     */
+    public function get_i18n()
+    {
+        if (! $this->i18n) {
+            $this->i18n = new Plugin_Name_i18n( $this->get_plugin_name(), $this->get_plugin_version() );
+        }
 
+        return $this->i18n;
+    }
+
+    /**
+     * @since 1.1.0
+     *
+     * @return Plugin_Name_Admin
+     */
+    public function get_admin()
+    {
+        if (! $this->admin) {
+            $this->admin = new Plugin_Name_Admin( $this->get_plugin_name(), $this->get_plugin_version() );
+        }
+
+        return $this->admin;
+    }
+
+    /**
+     * @since 1.1.0
+     *
+     * @return Plugin_Name_Public
+     */
+    public function get_public()
+    {
+        if (! $this->public) {
+            $this->public = new Plugin_Name_Public( $this->get_plugin_name(), $this->get_plugin_version() );
+        }
+
+        return $this->public;
+    }
 }

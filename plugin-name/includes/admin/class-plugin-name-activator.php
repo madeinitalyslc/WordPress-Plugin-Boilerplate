@@ -2,7 +2,7 @@
 
 namespace Plugin_Name\Includes\Admin;
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 /**
  * Fired during plugin activation.
@@ -15,7 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  * @author     Your Name <email@example.com>
  */
 
-class Plugin_Name_Activator {
+class Activator
+{
 
 	/**
 	 * Short Description. (use period)
@@ -24,8 +25,6 @@ class Plugin_Name_Activator {
 	 *
 	 * @since    1.0.0
 	 */
-	public static function activate() {
-
-	}
-
+	public static function activate()
+	{ }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Provide a public-facing view for the plugin
  * These templates files should be arranged in folders.
@@ -9,10 +10,11 @@
  * @version 2.0.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly
 }
 ?>
+
 <div class="plugin-name">
 
-</div>
+</div> 

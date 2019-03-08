@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name: Your Plugin Name
  * Plugin URI: https://pluginlink.com
@@ -12,13 +13,13 @@
 
 namespace Plugin_Name;
 
-use Plugin_Name\Includes\Admin\Plugin_Name_Activator;
-use Plugin_Name\Includes\Plugin_Name_Shortcodes;
+use Plugin_Name\Includes\Admin\Activator;
+use Plugin_Name\Includes\Shortcodes;
 
-if ( !class_exists( 'Plugin_Name' ) ) :
+if (!class_exists('Plugin')) :
+	final class Plugin
+	{
 
-	final class Plugin_Name {
-		
 		/**
 		 * Plugin version.
 		 *
@@ -30,7 +31,7 @@ if ( !class_exists( 'Plugin_Name' ) ) :
 		/**
 		 * The single instance of the class.
 		 *
-		 * @var Plugin_Name
+		 * @var Plugin
 		 * @since 1.0
 		 */
 		protected static $_instance = null;
@@ -46,9 +47,10 @@ if ( !class_exists( 'Plugin_Name' ) ) :
 		 */
 		public static function instance()
 		{
-			if ( is_null( self::$_instance ) ) {
+			if (is_null(self::$_instance)) {
 				self::$_instance = new self();
 			}
+
 			return self::$_instance;
 		}
 
@@ -69,10 +71,10 @@ if ( !class_exists( 'Plugin_Name' ) ) :
 		 */
 		private function define_constants()
 		{
-			$this->define( 'PLUGIN_NAME_URL', plugin_dir_url( __FILE__ ) );
-			$this->define( 'PLUGIN_NAME_ABSPATH', dirname( __FILE__ ) . '/' );
-            $this->define( 'PLUGIN_NAME_VERSION', $this->get_version() );
-            $this->define( 'PLUGIN_NAME_BASE', plugin_basename(__FILE__) );
+			$this->define('PLUGIN_NAME_URL', plugin_dir_url(__FILE__));
+			$this->define('PLUGIN_NAME_ABSPATH', dirname(__FILE__) . '/');
+			$this->define('PLUGIN_NAME_VERSION', $this->get_version());
+			$this->define('PLUGIN_NAME_BASE', plugin_basename(__FILE__));
 		}
 
 		/**
@@ -81,16 +83,17 @@ if ( !class_exists( 'Plugin_Name' ) ) :
 		 * @param  string $type admin, ajax, cron or frontend.
 		 * @return bool
 		 */
-		private function is_request( $type ) {
-			switch ( $type ) {
-				case 'admin' :
+		private function is_request($type)
+		{
+			switch ($type) {
+				case 'admin':
 					return is_admin();
-				case 'ajax' :
-					return defined( 'DOING_AJAX' );
-				case 'cron' :
-					return defined( 'DOING_CRON' );
-				case 'frontend' :
-					return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
+				case 'ajax':
+					return defined('DOING_AJAX');
+				case 'cron':
+					return defined('DOING_CRON');
+				case 'frontend':
+					return (!is_admin() || defined('DOING_AJAX')) && !defined('DOING_CRON');
 			}
 		}
 
@@ -101,10 +104,10 @@ if ( !class_exists( 'Plugin_Name' ) ) :
 		 * @param  string $name
 		 * @param  string|bool $value
 		 */
-		private function define( $name, $value )
+		private function define($name, $value)
 		{
-			if ( ! defined( $name ) ) {
-				define( $name, $value );
+			if (!defined($name)) {
+				define($name, $value);
 			}
 		}
 
@@ -118,36 +121,37 @@ if ( !class_exists( 'Plugin_Name' ) ) :
 		}
 
 		/**
-		 * Include required core files used in admin and on the frontend. 
+		 * Include required core files used in admin and on the frontend.
 		 * @since  1.0
 		 */
 		public function includes()
 		{
-            require_once( PLUGIN_NAME_ABSPATH . 'autoload.php' );
-			include_once( PLUGIN_NAME_ABSPATH . 'includes/class-plugin-name-post-type.php' );
+			require_once(PLUGIN_NAME_ABSPATH . 'autoload.php');
+			include_once(PLUGIN_NAME_ABSPATH . 'includes/class-plugin-name-post-type.php');
 
 			// Admin Classes that are no
-			if ( $this->is_request( 'admin' ) ) {
-				include_once( PLUGIN_NAME_ABSPATH . 'includes/admin/class-plugin-name-admin-assets.php' );
-				include_once( PLUGIN_NAME_ABSPATH . 'includes/admin/class-plugin-name-settings.php' );
-				include_once( PLUGIN_NAME_ABSPATH . 'includes/admin/class-plugin-name-menu.php' );
+			if ($this->is_request('admin')) {
+				include_once(PLUGIN_NAME_ABSPATH . 'includes/admin/class-plugin-name-admin-assets.php');
+				include_once(PLUGIN_NAME_ABSPATH . 'includes/admin/class-plugin-name-settings.php');
+				include_once(PLUGIN_NAME_ABSPATH . 'includes/admin/class-plugin-name-menu.php');
 			}
 
 			// Front Classes
-			if ( $this->is_request( 'frontend' ) ) {
-				include_once( PLUGIN_NAME_ABSPATH . 'includes/class-plugin-name-assets.php' );
+			if ($this->is_request('frontend')) {
+				include_once(PLUGIN_NAME_ABSPATH . 'includes/class-plugin-name-assets.php');
 			}
 		}
-		
+
 		/**
 		 * Hook into Actions & Filters.
 		 * @since  1.0
 		 */
 		private function init_hooks()
 		{
-			register_activation_hook( __FILE__, array( 'Plugin_Name\Includes\Admin\Plugin_Name_Activator', 'activate' ) );
-			add_action( 'init', array( $this, 'init' ), 0 );
-            add_action( 'init', array( 'Plugin_Name\Includes\Plugin_Name_Shortcodes', 'init' ) ); // shortcodes and template path example
+			register_activation_hook(__FILE__, array('Plugin_Name\Includes\Admin\Activator', 'activate'));
+
+			add_action('init', array($this, 'init'), 0);
+			add_action('init', array('Plugin_Name\Includes\Shortcodes', 'init')); // shortcodes and template path example
 		}
 
 		/**
@@ -157,13 +161,13 @@ if ( !class_exists( 'Plugin_Name' ) ) :
 		public function init()
 		{
 			// Before init action.
-			do_action( 'before_plugin_name_init' );
-			
+			do_action('before_plugin_name_init');
+
 			// Set up localisation.
 			$this->load_plugin_textdomain();
 
 			// After init action.
-			do_action( 'after_plugin_name_init' );
+			do_action('after_plugin_name_init');
 		}
 
 		/**
@@ -172,38 +176,37 @@ if ( !class_exists( 'Plugin_Name' ) ) :
 		 */
 		public function load_plugin_textdomain()
 		{
-			load_plugin_textdomain( 'plugin-name', false, basename( dirname( __FILE__ ) ) . '/languages' );
+			load_plugin_textdomain('plugin-name', false, basename(dirname(__FILE__)) . '/languages');
 		}
 
 
-	    /**
+		/**
 	     * Get the path of PHP template
 	     *
 	     * @since  1.0
 	     * @return string
 	     */
-	    public static function get_template_path($template_name, $template_path = '') 
-	    {
-	    	// Default Template Path
-	    	$default_path = PLUGIN_NAME_ABSPATH. 'templates' .trailingslashit($template_path);
+		public static function get_template_path($template_name, $template_path = '')
+		{
+			// Default Template Path
+			$default_path = PLUGIN_NAME_ABSPATH . 'templates' . trailingslashit($template_path);
 
 			// Look within passed path within the theme - this is priority.
 			$template = locate_template(
 				array(
-					'plugin-name'. trailingslashit( $template_path ) . $template_name,
+					'plugin-name' . trailingslashit($template_path) . $template_name,
 					$template_name,
 				)
 			);
 
 			// Get default template/
-			if ( ! $template ) {
+			if (!$template) {
 				$template = $default_path . $template_name;
 			}
 
 			// Return what we found.
-			return apply_filters( 'plugin_name_locate_template', $template, $template_path );
-	    }
-	    
+			return apply_filters('plugin_name_locate_template', $template, $template_path);
+		}
 	}
 
 endif;
@@ -217,7 +220,8 @@ endif;
  * @since  1.0.0
  * @return Plugin_Name
  */
-function Plugin_Name() {
+function Plugin_Name()
+{
 	return Plugin_Name::instance();
 }
 

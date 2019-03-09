@@ -2,16 +2,17 @@
 
 namespace Plugin_Name\Includes\Admin;
 
-if (!defined('ABSPATH')) exit; // Exit if accessed directly
+if (!defined('ABSPATH')) {
+    exit;
+} // Exit if accessed directly
 
 /**
- * Handle frontend scripts
+ * Handle frontend scripts.
  *
  * @since     2.0.0
  */
 class Assets
 {
-
     /**
      * Hook in methods.
      */
@@ -40,8 +41,8 @@ class Assets
         // If you're not including an image upload then you can leave this function call out
         wp_enqueue_media();
 
-        wp_enqueue_script('plugin-name-admin-js', PLUGIN_NAME_URL . 'includes/admin/assets/js/plugin-name-admin.js', array('farbtastic', 'jquery'), PLUGIN_NAME_VERSION, false);
-        wp_enqueue_style('plugin-name-admin-css',  PLUGIN_NAME_URL . 'includes/admin/assets/css/plugin-name-admin.css', array(), PLUGIN_NAME_VERSION, 'all');
+        wp_enqueue_script('plugin-name-admin-js', PLUGIN_NAME_URL.'includes/admin/assets/js/plugin-name-admin.js', array('farbtastic', 'jquery'), PLUGIN_NAME_VERSION, false);
+        wp_enqueue_style('plugin-name-admin-css', PLUGIN_NAME_URL.'includes/admin/assets/css/plugin-name-admin.css', array(), PLUGIN_NAME_VERSION, 'all');
     }
 
     /**
@@ -55,4 +56,3 @@ class Assets
 }
 
 Assets::init();
-

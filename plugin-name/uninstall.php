@@ -11,12 +11,12 @@
  * - Run an admin referrer check to make sure it goes through authentication
  * - Verify the output of $_GET makes sense
  * - Repeat with other user roles. Best directly by using the links/query string parameters.
- * - Repeat things for multisite. Once for a single site in the network, once sitewide.
+ * - Repeat things for multi site. Once for a single site in the network, once site wide.
  *
  * @since      1.0.0
  */
 
 // If uninstall not called from WordPress, then exit.
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-	exit;
+if (!defined('WP_UNINSTALL_PLUGIN')) {
+    exit;
 }

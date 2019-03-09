@@ -37,7 +37,7 @@ class Settings
 
     public function __construct()
     {
-        $this->base = 'plugin_name_';
+        $this->base = 'plugin-name_';
 
         // Initialise settings
         add_action('init', array($this, 'init_settings'), 1);
@@ -174,7 +174,7 @@ class Settings
             ),
         );
 
-        $settings = apply_filters('plugin_name_settings_fields', $settings);
+        $settings = apply_filters('plugin-name_settings_fields', $settings);
 
         return $settings;
     }

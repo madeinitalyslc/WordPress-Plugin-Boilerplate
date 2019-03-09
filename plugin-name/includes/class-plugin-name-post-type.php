@@ -30,7 +30,7 @@ class Post_Type
     public function register_post_type()
     {
         $cpt_labels = apply_filters(
-            'plugin_name_post_type_labels',
+            'plugin-name_post_type_labels',
             array(
                 'name' => __('Example CPTs', 'plugin-name'),
                 'singular_name' => _x('Example CPT', 'Singular Name', 'plugin-name'),
@@ -51,7 +51,7 @@ class Post_Type
         );
 
         $cpt_args = apply_filters(
-            'plugin_name_post_type_args',
+            'plugin-name_post_type_args',
             array(
                 'labels' => $cpt_labels,
                 'public' => true,
@@ -71,7 +71,7 @@ class Post_Type
             $cpt_labels
         );
 
-        register_post_type('plugin_name_cpt', $cpt_args);
+        register_post_type('plugin-name_cpt', $cpt_args);
     }
 }
 

@@ -51,7 +51,7 @@ class Assets
     public static function localize_printed_scripts()
     {
         $var = array('ajax_url' => admin_url('admin-ajax.php'));
-        wp_localize_script('plugin-name-js', 'plugin_name', $var);
+        wp_localize_script('plugin-name-js', 'plugin-name', $var);
     }
 }
 

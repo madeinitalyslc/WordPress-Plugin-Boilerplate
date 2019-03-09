@@ -33,7 +33,7 @@ class Menu
     public function add_menu_item()
     {
         // change to add_options_page to add it under general options.
-        add_menu_page(__('Plugin Settings', 'plugin-name'), __('Plugin Settings', 'plugin-name'), 'manage_options', 'plugin_name_settings', array($this, 'settings_page'));
+        add_menu_page(__('Plugin Settings', 'plugin-name'), __('Plugin Settings', 'plugin-name'), 'manage_options', 'plugin-name_settings', array($this, 'settings_page'));
     }
 
     /**
@@ -51,7 +51,8 @@ class Menu
      */
     public function settings_page()
     {
-        $settings_api = Plugin_Name_Settings::instance();
+        $settings_api = Settings::instance();
+
         $this->settings = $settings_api->get_settings_fields();
 
         // Build page HTML
@@ -99,8 +100,8 @@ class Menu
 
         // Get settings fields
         ob_start();
-        settings_fields('plugin_name_settings');
-        do_settings_sections('plugin_name_settings');
+        settings_fields('plugin-name_settings');
+        do_settings_sections('plugin-name_settings');
         $html .= ob_get_clean();
 
         $html .= '<p class="submit">'."\n";
@@ -121,7 +122,7 @@ class Menu
     public function add_settings_link($links)
     {
         $mylinks = array(
-            '<a href="'.admin_url('admin.php?page=plugin_name_settings&tab=gens_raf').'">'.__('Settings', 'plugin-name').'</a>',
+            '<a href="'.admin_url('admin.php?page=plugin-name_settings&tab=gens_raf').'">'.__('Settings', 'plugin-name').'</a>',
         );
 
         return array_merge($links, $mylinks);

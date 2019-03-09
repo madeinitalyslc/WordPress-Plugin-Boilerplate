@@ -44,7 +44,7 @@ if (!class_exists('Plugin')) :
          * @since 1.0
          * @static
          *
-         * @return plugin_Name - Main instance
+         * @return Plugin - Main instance
          */
         public static function instance()
         {
@@ -228,11 +228,11 @@ endif;
  *
  * @since  1.0.0
  *
- * @return Plugin_Name
+ * @return Plugin
  */
 function Plugin_Name()
 {
-    return Plugin_Name::instance();
+    return Plugin::instance();
 }
 
 Plugin_Name();

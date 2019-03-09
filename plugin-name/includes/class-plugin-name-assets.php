@@ -1,13 +1,15 @@
 <?php
 /**
- * Handle frontend scripts
+ * Handle frontend scripts.
  *
  * @since     2.0.0
  */
 
 namespace Plugin_Name\Includes;
 
-if (!defined('ABSPATH')) exit; // Exit if accessed directly
+if (!defined('ABSPATH')) {
+    exit;
+} // Exit if accessed directly
 
 class Assets
 {
@@ -25,8 +27,8 @@ class Assets
      */
     public static function load_scripts()
     {
-        wp_enqueue_script('plugin-name-js', PLUGIN_NAME_URL . 'assets/js/plugin-name-public.js', array('jquery'), PLUGIN_NAME_VERSION, false);
-        wp_enqueue_style('plugin-name',  PLUGIN_NAME_URL . 'assets/css/plugin-name-public.css', array(), PLUGIN_NAME_VERSION, 'all');
+        wp_enqueue_script('plugin-name-js', PLUGIN_NAME_URL.'assets/js/plugin-name-public.js', array('jquery'), PLUGIN_NAME_VERSION, false);
+        wp_enqueue_style('plugin-name', PLUGIN_NAME_URL.'assets/css/plugin-name-public.css', array(), PLUGIN_NAME_VERSION, 'all');
     }
 
     /**
@@ -35,7 +37,7 @@ class Assets
     public static function localize_printed_scripts()
     {
         $var = array('ajax_url' => admin_url('admin-ajax.php'));
-        wp_localize_script('plugin-name-js', 'plugin_name', $var);
+        wp_localize_script('plugin-name-js', 'plugin-name', $var);
     }
 }
 

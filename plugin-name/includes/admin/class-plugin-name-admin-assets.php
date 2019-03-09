@@ -28,7 +28,7 @@ class Assets
     public static function load_scripts($hook)
     {
         // Load only on ?page=mypluginname
-        if ($hook != 'toplevel_page_plugin_name_settings') {
+        if ($hook != 'toplevel_page_plugin-name_settings') {
             return;
         }
 

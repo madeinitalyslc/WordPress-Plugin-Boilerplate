@@ -187,6 +187,7 @@ class Settings
         if (is_array($this->settings)) {
             // Check posted/selected tab
             $current_section = '';
+
             if (isset($_POST['tab']) && $_POST['tab']) {
                 $current_section = $_POST['tab'];
             } else {
@@ -201,7 +202,7 @@ class Settings
                 }
 
                 // Add section to page
-                add_settings_section($section, $data['title'], array($this, 'settings_section'), 'plugin_name_settings');
+                add_settings_section($section, $data['title'], array($this, 'settings_section'), 'plugin-name_settings');
 
                 foreach ($data['fields'] as $field) {
                     // Validation callback for field
@@ -215,7 +216,7 @@ class Settings
                     register_setting('plugin_name_settings', $option_name, $validation);
 
                     // Add field to page
-                    add_settings_field($field['id'], $field['label'], array($this, 'display_field'), 'plugin_name_settings', $section, array('field' => $field, 'prefix' => $this->base));
+                    add_settings_field($field['id'], $field['label'], array($this, 'display_field'), 'plugin-name_settings', $section, array('field' => $field, 'prefix' => $this->base));
                 }
 
                 if (!$current_section) {
@@ -245,17 +246,22 @@ class Settings
         } else {
             $field = $data;
         }
+
         // Check for prefix on option name
         $option_name = '';
+
         if (isset($data['prefix'])) {
             $option_name = $data['prefix'];
         }
+
         // Get saved data
         $data = '';
+
         if ($post) {
             // Get saved field data
             $option_name .= $field['id'];
             $option = get_post_meta($post->ID, $field['id'], true);
+
             // Get data to display in field
             if (isset($option)) {
                 $data = $option;
@@ -264,24 +270,29 @@ class Settings
             // Get saved option
             $option_name .= $field['id'];
             $option = get_option($option_name);
+
             // Get data to display in field
             if (isset($option)) {
                 $data = $option;
             }
         }
+
         // Show default data if no option saved and default is supplied
         if ($data === false && isset($field['default'])) {
             $data = $field['default'];
         } elseif ($data === false) {
             $data = '';
         }
+
         $html = '';
+
         switch ($field['type']) {
             case 'text':
             case 'url':
             case 'email':
                 $html .= '<input id="'.esc_attr($field['id']).'" type="text" name="'.esc_attr($option_name).'" placeholder="'.esc_attr($field['placeholder']).'" value="'.esc_attr($data).'" />'."\n";
                 break;
+
             case 'password':
             case 'number':
             case 'hidden':
@@ -295,12 +306,15 @@ class Settings
                 }
                 $html .= '<input id="'.esc_attr($field['id']).'" type="'.esc_attr($field['type']).'" name="'.esc_attr($option_name).'" placeholder="'.esc_attr($field['placeholder']).'" value="'.esc_attr($data).'"'.$min.''.$max.'/>'."\n";
                 break;
+
             case 'text_secret':
                 $html .= '<input id="'.esc_attr($field['id']).'" type="text" name="'.esc_attr($option_name).'" placeholder="'.esc_attr($field['placeholder']).'" value="" />'."\n";
                 break;
+
             case 'textarea':
                 $html .= '<textarea id="'.esc_attr($field['id']).'" rows="5" cols="50" name="'.esc_attr($option_name).'" placeholder="'.esc_attr($field['placeholder']).'">'.$data.'</textarea><br/>'."\n";
                 break;
+
             case 'checkbox':
                 $checked = '';
                 if ($data && 'on' == $data) {
@@ -308,6 +322,7 @@ class Settings
                 }
                 $html .= '<input id="'.esc_attr($field['id']).'" type="'.esc_attr($field['type']).'" name="'.esc_attr($option_name).'" '.$checked.'/>'."\n";
                 break;
+
             case 'checkbox_multi':
                 foreach ($field['options'] as $k => $v) {
                     $checked = false;
@@ -317,6 +332,7 @@ class Settings
                     $html .= '<label for="'.esc_attr($field['id'].'_'.$k).'" class="checkbox_multi"><input type="checkbox" '.checked($checked, true, false).' name="'.esc_attr($option_name).'[]" value="'.esc_attr($k).'" id="'.esc_attr($field['id'].'_'.$k).'" /> '.$v.'</label> ';
                 }
                 break;
+
             case 'radio':
                 foreach ($field['options'] as $k => $v) {
                     $checked = false;
@@ -326,6 +342,7 @@ class Settings
                     $html .= '<label for="'.esc_attr($field['id'].'_'.$k).'"><input type="radio" '.checked($checked, true, false).' name="'.esc_attr($option_name).'" value="'.esc_attr($k).'" id="'.esc_attr($field['id'].'_'.$k).'" /> '.$v.'</label> ';
                 }
                 break;
+
             case 'select':
                 $html .= '<select name="'.esc_attr($option_name).'" id="'.esc_attr($field['id']).'">';
                 foreach ($field['options'] as $k => $v) {
@@ -337,6 +354,7 @@ class Settings
                 }
                 $html .= '</select> ';
                 break;
+
             case 'select_multi':
                 $html .= '<select name="'.esc_attr($option_name).'[]" id="'.esc_attr($field['id']).'" multiple="multiple">';
                 foreach ($field['options'] as $k => $v) {
@@ -348,6 +366,7 @@ class Settings
                 }
                 $html .= '</select> ';
                 break;
+
             case 'image':
                 $image_thumb = '';
                 if ($data) {
@@ -358,6 +377,7 @@ class Settings
                 $html .= '<input id="'.$option_name.'_delete" type="button" class="image_delete_button button" value="'.__('Remove image', 'plugin-name').'" />'."\n";
                 $html .= '<input id="'.$option_name.'" class="image_data_field" type="hidden" name="'.$option_name.'" value="'.$data.'"/><br/>'."\n";
                 break;
+
             case 'color':
                 ?><div class="color-picker" style="position:relative;">
     <input type="text" name="<?php esc_attr_e($option_name); ?>" class="color" value="<?php esc_attr_e($data); ?>" />
@@ -365,6 +385,7 @@ class Settings
 </div>
 <?php
 break;
+
 case 'repeater':
     if ($data) {
         foreach ($data as $key => $value) {
@@ -383,6 +404,7 @@ case 'repeater':
     }
     $html .= '<a href="#" class="am2_add_getter button button-small">Add new Cookie</a>';
     break;
+
 case 'editor':
     wp_editor($data, $option_name, array(
         'textarea_name' => $option_name,
@@ -395,11 +417,14 @@ case 'editor':
     case 'select_multi':
         $html .= '<br/><span class="description">'.$field['description'].'</span>';
         break;
+
     default:
         if (!$post) {
             $html .= '<label for="'.esc_attr($field['id']).'">'."\n";
         }
+
         $html .= '<span class="description">'.$field['description'].'</span>'."\n";
+
         if (!$post) {
             $html .= '</label>'."\n";
         }
@@ -408,6 +433,7 @@ case 'editor':
         if (!$echo) {
             return $html;
         }
+
         echo $html;
     }
 
